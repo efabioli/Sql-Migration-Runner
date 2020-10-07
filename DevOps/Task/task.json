@@ -1,0 +1,86 @@
+{
+  "id": "B9780285-58E8-48C4-8281-4267DDC9AC91",
+  "name": "SqlMigrationRunner",
+  "friendlyName": "Custom Sql Migration",
+  "description": "This task allows to run migration scripts during the build/release pipeline",
+  "helpMarkDown": "",
+  "category": "Package",
+  "author": "Emiliano Fabioli",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.131.0",
+  "instanceNameFormat": "Sql Migration Runner",
+  "groups": [
+    {
+      "name": "advanceOptions",
+      "displayName": "Advanced Options",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectionString",
+      "type": "string",
+      "label": "Connection String",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "DB connection string to upgrade"
+    },
+    {
+      "name": "artifactPath",
+      "type": "string",
+      "label": "Build artifact path",
+      "defaultValue": "$(System.DefaultWorkingDirectory)\\{Relase.PrimaryArtifactSourceAlias}\\drop\\YOUR_ARTIFACT_NAME.zip",
+      "required": true,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "folderName",
+      "type": "string",
+      "label": "Name of folder that contains sql scripts",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "includeSubfolder",
+      "type": "boolean",
+      "label": "If true, it will look for migration scripts into sub-folders too",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "migrationStrategy",
+      "type": "radio",
+      "label": "Apply migration scritps following the selected strategy",
+      "required": false,
+      "defaultValue": "forward",
+      "groupName": "advanceOptions",
+      "options": {
+        "forward": "Forward",
+        "version": "Version"
+      },
+      "helpMarkDown": "Optionally, select the migration strategy to use: - Forward: (default) only migration scripts with a higher version number will be run; - Version: task will run all migration scripts that have not been run yet (based on version history)"
+    },
+    {
+      "name": "versionThreshold",
+      "type": "string",
+      "label": "Version Threshold",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanceOptions",
+      "helpMarkDown": "Allow to set a migration threshold. Eg. setting to be 1.1.5, only migration lower or equal to 1.1.5 version will be run"
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\SqlMigrationRunner.ps1",
+      "argumentFormat": "",
+      "workingDirectory": ""
+    }
+  }
+}
